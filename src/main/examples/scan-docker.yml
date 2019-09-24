@@ -1,0 +1,17 @@
+usage:
+  version: 2.1
+  orbs:
+    sonarcloud: sonarsource/sonarcloud@dev:alpha
+  jobs:
+    build:
+      docker:
+        - image: 'circleci/python:3.7.4'
+      steps:
+      - checkout
+      - sonarcloud/scan
+  workflows:
+    my-workflow:
+      jobs:
+        - build:
+            context: sonarcloud
+  
