@@ -1,0 +1,17 @@
+description: Use the sonarcloud orb to detect bugs and vulnerabilities in your repository
+usage:
+  version: 2.1
+  jobs:
+    build:
+      docker:
+        - image: node:latest
+      steps:
+      - checkout
+      - sonarcloud/scan
+  orbs:
+    sonarcloud: sonarsource/sonarcloud@1.0.0
+  workflows:
+    main:
+      jobs:
+        - build:
+            context: sonarcloud
