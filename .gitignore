@@ -1,0 +1,44 @@
+# Eclipse
+.classpath
+.project
+.settings
+
+# Gradle
+build/
+.gradle/
+.gradletasknamecache
+classes/
+out/
+
+# IntelliJ
+*.iws
+*.iml
+*.ipr
+.idea/
+
+# Maven
+target/
+
+# Mac OS X
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# MSWindows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# NPM/yarn
+npm-debug.log*
+npm.tar.gz
+yarn-debug.log*
+yarn-error.log*
+
+# SonarQube/SonarCloud
+.sonar/
