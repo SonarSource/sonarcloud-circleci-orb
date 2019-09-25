@@ -8,11 +8,16 @@ jobs:
     parameters:
       image:
         type: string
+      token_variable_name:
+        type: string
+        default: SONAR_TOKEN
     docker:
       - image: <<parameters.image>>:latest
     steps:
       - checkout
-      - sonarcloud/scan
+      - sonarcloud/scan:
+          sonar_token_variable_name: <<parameters.token_variable_name>>
+
 workflows:
   publish-dev:
     jobs:
@@ -34,6 +39,11 @@ workflows:
           name: test-circleci-python
           image: circleci/python
           context: SonarCloud Analysis
+          requires: [orb-tools/publish-dev]
+      - test:
+          name: test-different-sonar-token-variable-name
+          image: circleci/python
+          token_variable_name: DIFFERENT_SONAR_TOKEN # This token is setup as a project variable in CircleCI
           requires: [orb-tools/publish-dev]
       - orb-tools/publish:
           context: Publishing Orb

@@ -1,11 +1,16 @@
 description: Detect bugs and vulnerabilities
 parameters:
   os:
+    description: the OS of the CircleCI environment where this orb will be executed
     default: linux
     enum:
     - linux
     - macosx
     type: enum
+  sonar_token_variable_name:
+    description: the name of the environment variable where the SonarCloud API token is stored 
+    default: SONAR_TOKEN
+    type: env_var_name
 steps:
   - run:
       name: SonarCloud
@@ -14,6 +19,7 @@ steps:
         VERSION=${SONAR_SCANNER_VERSION:-4.1.0.1829}
         OS=<<parameters.os>>
         SCANNER_DIRECTORY=scanner
+        SONAR_TOKEN=$<<parameters.sonar_token_variable_name>>
 
         mkdir -p $SCANNER_DIRECTORY
         curl -Ol https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION-$OS.zip
