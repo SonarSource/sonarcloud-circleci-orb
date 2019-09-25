@@ -17,7 +17,7 @@ steps:
 
         mkdir -p $SCANNER_DIRECTORY
         curl -Ol https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION-$OS.zip
-        unzip -q -o sonar-scanner-cli-$VERSION-$OS.zip -d $SCANNER_DIRECTORY
+        unzip -qq -o sonar-scanner-cli-$VERSION-$OS.zip -d $SCANNER_DIRECTORY
         
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
