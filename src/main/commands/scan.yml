@@ -36,7 +36,7 @@ steps:
 
         $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
       environment:
-        SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://dogfood-core.sc-dev.io"}'
+        SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://sonarcloud.io"}'
   - save_cache:
       key: v<<parameters.cache_version>>-sonarcloud-scanner-4.1.0.1829
       paths: /tmp/cache/scanner
