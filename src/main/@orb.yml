@@ -1,2 +1,5 @@
 version: 2.1
-description: Detect bugs and vulnerabilities in your repository. This orb is created by SonarSource (https://www.sonarsource.com/), the source is available at https://github.com/SonarSource/sonarcloud-circleci-orb
+description: Detect bugs and vulnerabilities in your repository.
+display:
+  home_url: https://www.sonarsource.com/
+  source_url: https://github.com/SonarSource/sonarcloud-circleci-orb
