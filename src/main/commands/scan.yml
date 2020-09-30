@@ -9,7 +9,7 @@ parameters:
     default: 1
     type: integer
   executor_os:
-    description: specify the OS of the executor
+    description: specify the OS of the executor. Supported options are linux and macosx.
     default: "linux"
     type: string
 steps:
