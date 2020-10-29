@@ -4,8 +4,8 @@ parameters:
     description: the name of the environment variable where the SonarCloud API token is stored 
     default: SONAR_TOKEN
     type: env_var_name
-  sonar_config_path:
-    description: path to the sonnar-scanner config to use (e.g. ~/my-repo-configs/.sonarcloud.properties)
+  sonar_properties_path:
+    description: path to the sonnar-scanner config to use (e.g. ~/my-repo-configs/sonar-project.properties)
     default: ""
     type: string
   cache_version:
@@ -38,8 +38,8 @@ steps:
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
 
-        if [ ! -z "<<parameters.sonar_config_path>>" ]; then
-          $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner -Dproject.settings=<<parameters.sonar_config_path>>
+        if [ ! -z "<<parameters.sonar_properties_path>>" ]; then
+          $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner -Dproject.settings=<<parameters.sonar_properties_path>>
         else
           $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
         fi
