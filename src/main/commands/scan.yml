@@ -4,6 +4,10 @@ parameters:
     description: the name of the environment variable where the SonarCloud API token is stored 
     default: SONAR_TOKEN
     type: env_var_name
+  sonar_properties_path:
+    description: path to the sonnar-scanner config to use (e.g. ~/my-repo-configs/sonar-project.properties)
+    default: ""
+    type: string
   cache_version:
     description: increment this value if the cache is corrupted and you want to start with a clean cache
     default: 1
@@ -30,11 +34,15 @@ steps:
           curl -Ol https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION-$OS.zip
           unzip -qq -o sonar-scanner-cli-$VERSION-$OS.zip -d $SCANNER_DIRECTORY
         fi
-        
+
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
 
-        $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
+        if [ ! -z "<<parameters.sonar_properties_path>>" ]; then
+          $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner -Dproject.settings=<<parameters.sonar_properties_path>>
+        else
+          $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
+        fi
       environment:
         SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://sonarcloud.io"}'
   - save_cache:
