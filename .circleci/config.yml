@@ -17,9 +17,8 @@ workflows:
     jobs:
       - orb-tools/pack:
           source-dir: src/main
-          destination-orb-path: orb.yml
-          workspace-path: orb.yml
-          artifact-path: orb.yml
+          use-orb-pack: true
+          attach-workspace: true
       - orb-tools/publish-dev:
           context: Publishing Orb
           orb-name: sonarsource/sonarcloud
