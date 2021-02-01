@@ -6,6 +6,7 @@ workflows:
     jobs:
       - orb-tools/lint
       - orb-tools/pack
+          source-dir: src/main
       - orb-tools/publish-dev:
           context: Publishing Orb
           orb-name: sonarsource/sonarcloud
