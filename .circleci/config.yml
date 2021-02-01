@@ -5,12 +5,10 @@ workflows:
   publish-dev:
     jobs:
       - orb-tools/lint
-      - orb-tools/pack
+      - orb-tools/pack:
           source-dir: src/main
       - orb-tools/publish-dev:
           context: Publishing Orb
           orb-name: sonarsource/sonarcloud
           requires:
-            - orb-tools/lint 
-
-
+            - orb-tools/lint
