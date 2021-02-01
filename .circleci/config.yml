@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  orb-tools: circleci/orb-tools@8.27.4
+  orb-tools: circleci/orb-tools@10.0.3
   sonarcloud: sonarsource/sonarcloud@dev:alpha
 jobs:
   test:
@@ -17,9 +17,8 @@ workflows:
     jobs:
       - orb-tools/pack:
           source-dir: src/main
-          destination-orb-path: orb.yml
-          workspace-path: orb.yml
-          artifact-path: orb.yml
+          use-orb-pack: true
+          attach-workspace: true
       - orb-tools/publish-dev:
           context: Publishing Orb
           orb-name: sonarsource/sonarcloud
