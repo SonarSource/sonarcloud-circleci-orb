@@ -10,6 +10,6 @@ workflows:
       - orb-tools/publish-dev:
           context: Publishing Orb
           orb-name: sonarsource/sonarcloud
-          orb-path: orb.yml
           requires:
             - orb-tools/lint
+            - orb-tools/pack
