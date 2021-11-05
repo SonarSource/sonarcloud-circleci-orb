@@ -19,7 +19,7 @@ workflows:
           workspace-path: orb.yml
           artifact-path: orb.yml
       - orb-tools/publish-dev:
-          context: Publishing Orb
+         # context: Publishing Orb
           orb-name: elateral/sonarqube-scanner
           requires: [orb-tools/pack]
       - test:
