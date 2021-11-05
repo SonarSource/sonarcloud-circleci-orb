@@ -23,7 +23,6 @@ workflows:
           orb-name: elateral/sonarqube-scanner
           requires: [orb-tools/pack]
       - orb-tools/publish:
-          context: Publishing Orb
           orb-ref: elateral/sonarqube-scanner@0.0.2
           attach-workspace: true
           requires: [orb-tools/publish-dev]
