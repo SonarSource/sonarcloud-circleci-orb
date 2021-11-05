@@ -7,11 +7,11 @@ usage:
         - image: node:latest
       steps:
       - checkout
-      - sonarcloud/scan
+      - sonarscan/scan
   orbs:
-    sonarcloud: sonarsource/sonarcloud@1.0.0
+    sonarscan: elateral/sonarqube-scanner@1.0.0
   workflows:
     main:
       jobs:
         - build:
-            context: sonarcloud
+            context: sonarscan

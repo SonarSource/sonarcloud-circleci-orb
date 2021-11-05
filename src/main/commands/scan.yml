@@ -1,7 +1,7 @@
 description: Detect bugs and vulnerabilities
 parameters:
   sonar_token_variable_name:
-    description: the name of the environment variable where the SonarCloud API token is stored 
+    description: the name of the environment variable where the SonarQube API token is stored 
     default: SONAR_TOKEN
     type: env_var_name
   cache_version:
@@ -14,9 +14,9 @@ steps:
       command: mkdir -p /tmp/cache/scanner
   - restore_cache:
       keys:
-        - v<<parameters.cache_version>>-sonarcloud-scanner-4.1.0.1829
+        - v<<parameters.cache_version>>-sonarqube-scannerner-4.1.0.1829
   - run:
-      name: SonarCloud
+      name: SonarQubeScan
       command: |
         set -e
         VERSION=4.1.0.1829
@@ -35,8 +35,6 @@ steps:
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
 
         $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
-      environment:
-        SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://sonarcloud.io"}'
   - save_cache:
-      key: v<<parameters.cache_version>>-sonarcloud-scanner-4.1.0.1829
+      key: v<<parameters.cache_version>>-sonarqube-scannerner-4.1.0.1829
       paths: /tmp/cache/scanner
