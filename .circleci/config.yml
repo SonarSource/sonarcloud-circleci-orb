@@ -22,21 +22,11 @@ workflows:
          # context: Publishing Orb
           orb-name: elateral/sonarqube-scanner
           requires: [orb-tools/pack]
-      - test:
-          name: test-node
-          image: node
-          context: SonarCloud Analysis
-          requires: [orb-tools/publish-dev]
-      - test:
-          name: test-circleci-python
-          image: circleci/python
-          context: SonarCloud Analysis
-          requires: [orb-tools/publish-dev]
       - orb-tools/publish:
           context: Publishing Orb
           orb-ref: elateral/sonarqube-scanner@0.0.2
           attach-workspace: true
-          requires: [test-node, test-circleci-python]
+          requires: [orb-tools/publish-dev]
           filters:
             branches:
               only: master
