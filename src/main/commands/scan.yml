@@ -14,7 +14,7 @@ steps:
       command: mkdir -p /tmp/cache/scanner
   - restore_cache:
       keys:
-        - v<<parameters.cache_version>>-sonarqube-scannerner-4.1.0.1829
+        - v<<parameters.cache_version>>-sonarqube-scanner-4.1.0.1829
   - run:
       name: SonarQubeScan
       command: |
@@ -34,7 +34,7 @@ steps:
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
 
-        $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
+        $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner -Dsonar.dependencyCheck.jsonReportPath=./dependency-check.json -Dsonar.dependencyCheck.htmlReportPath=./dependency-check.html
   - save_cache:
-      key: v<<parameters.cache_version>>-sonarqube-scannerner-4.1.0.1829
+      key: v<<parameters.cache_version>>-sonarqube-scanner-4.1.0.1829
       paths: /tmp/cache/scanner
