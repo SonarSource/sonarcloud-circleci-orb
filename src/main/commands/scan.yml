@@ -37,8 +37,7 @@ steps:
         $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner \
           -Dsonar.dependencyCheck.jsonReportPath=./depCheck/dependency-check-report.json \
           -Dsonar.dependencyCheck.htmlReportPath=./depCheck/dependency-check-report.html \
-          -Dsonar.javascript.jstestdriver.coveragefile=./coverage/lcov.info \
-          -Dsonar.javascript.lcov.reportPath=./coverage/lcov-report
+          -Dsonar.javascript.lcov.reportPath=./coverage/lcov.info
   - save_cache:
       key: v<<parameters.cache_version>>-sonarqube-scanner-4.1.0.1829
       paths: /tmp/cache/scanner
