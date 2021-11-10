@@ -38,6 +38,7 @@ steps:
           -Dsonar.dependencyCheck.jsonReportPath=./depCheck/dependency-check-report.json \
           -Dsonar.dependencyCheck.htmlReportPath=./depCheck/dependency-check-report.html \
           -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+          -Dsonar.python.xunit.reportPath=./coverage/unit-tests.xml
   - save_cache:
       key: v<<parameters.cache_version>>-sonarqube-scanner-4.1.0.1829
       paths: /tmp/cache/scanner
