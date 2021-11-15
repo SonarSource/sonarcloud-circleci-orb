@@ -10,7 +10,7 @@ parameters:
     type: integer
   sonar_additional_params:
     description: 
-    default:
+    default: ""
     type: string
 steps:
   - run:
