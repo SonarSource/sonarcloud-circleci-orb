@@ -8,6 +8,10 @@ parameters:
     description: increment this value if the cache is corrupted and you want to start with a clean cache
     default: 1
     type: integer
+  sonar_additional_params:
+    description: 
+    default:
+    type: string
 steps:
   - run:
       name: Create cache directory if it doesn't exist
@@ -35,7 +39,8 @@ steps:
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
 
         $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner \
-          -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+          -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+          <<parameters.sonar_additional_params>>
 #          -Dsonar.dependencyCheck.jsonReportPath=./depCheck/dependency-check-report.json \
 #          -Dsonar.dependencyCheck.htmlReportPath=./depCheck/dependency-check-report.html \
   - save_cache:
