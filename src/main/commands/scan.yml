@@ -8,6 +8,10 @@ parameters:
     description: increment this value if the cache is corrupted and you want to start with a clean cache
     default: 1
     type: integer
+  project_root:
+    description: the root of the project that should be analyzed (relative to the root directory of the repository)
+    default: .
+    type: string
 steps:
   - run:
       name: Create cache directory if it doesn't exist
@@ -34,6 +38,7 @@ steps:
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
         chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
 
+        cd <<parameters.project_root>>
         $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
       environment:
         SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://sonarcloud.io"}'
