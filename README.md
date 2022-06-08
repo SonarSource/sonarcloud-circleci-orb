@@ -28,4 +28,4 @@ workflows:
 To publish a new version of the orb you need to change the version found in .circleci/config.yml to the new version. The CirceCI build pipeline will then publish the new version of the orb.
 
 ### Requirements
-If you analyse JavaScript files, Node.js with version at least 10 is required. 
+See https://docs.sonarcloud.io/appendices/scanner-environment/
