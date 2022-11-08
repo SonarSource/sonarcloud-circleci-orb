@@ -9,7 +9,7 @@ To connect to your SonarCloud project on `sonarcloud.io` you need to setup an ap
 ```yaml
 version: 2.1
 orbs:
-  sonarcloud: sonarsource/sonarcloud@1.0.0
+  sonarcloud: sonarsource/sonarcloud@1.0.3
 jobs:
   build:
     docker:
@@ -26,3 +26,6 @@ workflows:
 
 ### Publishing a new version
 To publish a new version of the orb you need to change the version found in .circleci/config.yml to the new version. The CirceCI build pipeline will then publish the new version of the orb.
+
+### Requirements
+See https://docs.sonarcloud.io/appendices/scanner-environment/
