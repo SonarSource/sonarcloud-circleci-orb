@@ -1,7 +1,7 @@
 description: Detect bugs and vulnerabilities
 parameters:
   sonar_token_variable_name:
-    description: the name of the environment variable where the SonarCloud API token is stored 
+    description: the name of the environment variable where the SonarCloud API token is stored
     default: SONAR_TOKEN
     type: env_var_name
   cache_version:
@@ -24,7 +24,7 @@ steps:
       command: |
         set -e
         VERSION=5.0.1.3006
-        SONAR_TOKEN=$<<parameters.sonar_token_variable_name>>
+        SONAR_TOKEN=${<< parameters.sonar_token_variable_name >>}
         SCANNER_DIRECTORY=/tmp/cache/scanner
         export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
         OS="linux"
