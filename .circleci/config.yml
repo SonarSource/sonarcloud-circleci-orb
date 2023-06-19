@@ -8,7 +8,7 @@ jobs:
         type: string
     docker:
       - image: <<parameters.image>>:latest
-    steps:
+    steps: 
       - checkout
 workflows:
   publish-dev:
@@ -23,7 +23,7 @@ workflows:
           orb-name: elateral/sonarqube-scanner
           requires: [orb-tools/pack]
       - orb-tools/publish:
-          orb-ref: elateral/sonarqube-scanner@0.0.14
+          orb-ref: elateral/sonarqube-scanner@1.0.0
           attach-workspace: true
           requires: [orb-tools/publish-dev]
           filters:
