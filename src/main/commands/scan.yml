@@ -44,5 +44,5 @@ steps:
 #          -Dsonar.dependencyCheck.jsonReportPath=./depCheck/dependency-check-report.json \
 #          -Dsonar.dependencyCheck.htmlReportPath=./depCheck/dependency-check-report.html \
   - save_cache:
-      key: v<<parameters.cache_version>>-sonarqube-scanner-4.1.0.1829
+      key: v<<parameters.cache_version>>-sonarqube-scanner-4.7.0.2747
       paths: /tmp/cache/scanner
