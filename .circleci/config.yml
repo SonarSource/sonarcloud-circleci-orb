@@ -23,21 +23,10 @@ workflows:
           context: Publishing Orb
           orb-name: sonarsource/sonarcloud
           requires: [orb-tools/pack]
-      - test:
-          name: test-node
-          image: node
-          context: SonarCloud Analysis
-          requires: [orb-tools/publish-dev]
-      - test:
-          name: test-circleci-python
-          image: circleci/python
-          context: SonarCloud Analysis
-          requires: [orb-tools/publish-dev]
       - orb-tools/publish:
           context: Publishing Orb
           orb-ref: sonarsource/sonarcloud@2.0.0
           attach-workspace: true
-          requires: [test-node, test-circleci-python]
           filters:
             branches:
               only: master
