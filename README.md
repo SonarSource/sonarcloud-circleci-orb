@@ -9,7 +9,7 @@ To connect to your SonarCloud project on `sonarcloud.io` you need to setup an ap
 ```yaml
 version: 2.1
 orbs:
-  sonarcloud: sonarsource/sonarcloud@1.0.3
+  sonarcloud: sonarsource/sonarcloud@1.2.0
 jobs:
   build:
     docker:
