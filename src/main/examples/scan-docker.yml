@@ -9,7 +9,7 @@ usage:
       - checkout
       - sonarscan/scan
   orbs:
-    sonarscan: elateral/sonarqube-scanner@1.0.0
+    sonarscan: elateral/sonarqube-scanner@1.2.0
   workflows:
     main:
       jobs:

@@ -18,12 +18,12 @@ steps:
       command: mkdir -p /tmp/cache/scanner
   - restore_cache:
       keys:
-        - v<<parameters.cache_version>>-sonarqube-scanner-4.8.0.2856
+        - v<<parameters.cache_version>>-sonarqube-scanner-5.0.1.3006
   - run:
       name: SonarQubeScan
       command: |
         set -e
-        VERSION=4.8.0.2856
+        VERSION=5.0.1.3006
         SONAR_TOKEN=$<<parameters.sonar_token_variable_name>>
         SCANNER_DIRECTORY=/tmp/cache/scanner
         export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
@@ -44,5 +44,5 @@ steps:
 #          -Dsonar.dependencyCheck.jsonReportPath=./depCheck/dependency-check-report.json \
 #          -Dsonar.dependencyCheck.htmlReportPath=./depCheck/dependency-check-report.html \
   - save_cache:
-      key: v<<parameters.cache_version>>-sonarqube-scanner-4.8.0.2856
+      key: v<<parameters.cache_version>>-sonarqube-scanner-5.0.1.3006
       paths: /tmp/cache/scanner

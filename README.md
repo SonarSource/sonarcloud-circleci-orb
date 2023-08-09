@@ -9,7 +9,7 @@ To connect to your SonarCloud project on `sonarcloud.io` you need to setup an ap
 ```yaml
 version: 2.1
 orbs:
-  sonarqube: elateral/sonarqube-scanner@1.0.0
+  sonarqube: elateral/sonarqube-scanner@1.2.0
 jobs:
   build:
     docker:
