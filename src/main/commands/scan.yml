@@ -38,20 +38,22 @@ steps:
         echo $SONAR_USER_HOME
 
         if [[ "$OS" = "any" ]]; then
-          SCANNER_FILENAME=sonar-scanner-cli-$VERSION
+          SCANNER_ZIP_NAME=sonar-scanner-cli-$VERSION
+          SCANNER_DIR_NAME=sonar-scanner-$VERSION
         else
-          SCANNER_FILENAME=sonar-scanner-cli-$VERSION-$OS
+          SCANNER_ZIP_NAME=sonar-scanner-cli-$VERSION-$OS
+          SCANNER_DIR_NAME=sonar-scanner-$VERSION-$OS
         fi
 
-        if [[ ! -x "$SCANNER_DIRECTORY/$SCANNER_FILENAME/bin/sonar-scanner" ]]; then
+        if [[ ! -x "$SCANNER_DIRECTORY/$SCANNER_CLI_NAME/bin/sonar-scanner" ]]; then
           SCANNER_BASE_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
-          curl -Ol $SCANNER_BASE_URL/$SCANNER_FILENAME.zip
-          unzip -qq -o $SCANNER_FILENAME.zip -d $SCANNER_DIRECTORY
+          curl -Ol $SCANNER_BASE_URL/$SCANNER_ZIP_NAME.zip
+          unzip -qq -o $SCANNER_ZIP_NAME.zip -d $SCANNER_DIRECTORY
         fi
 
-        chmod +x $SCANNER_DIRECTORY/$SCANNER_FILENAME/bin/sonar-scanner
-        if [[ -x "$SCANNER_DIRECTORY/$SCANNER_FILENAME/jre/bin/java" ]]; then
-          chmod +x $SCANNER_DIRECTORY/$SCANNER_FILENAME/jre/bin/java
+        chmod +x $SCANNER_DIRECTORY/$SCANNER_DIR_NAME/bin/sonar-scanner
+        if [[ -x "$SCANNER_DIRECTORY/$SCANNER_DIR_NAME/jre/bin/java" ]]; then
+          chmod +x $SCANNER_DIRECTORY/$SCANNER_DIR_NAME/jre/bin/java
         fi
 
         cd <<parameters.project_root>>
