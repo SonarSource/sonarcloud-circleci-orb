@@ -1,7 +1,7 @@
 description: Detect bugs and vulnerabilities
 parameters:
   sonar_token_variable_name:
-    description: the name of the environment variable where the SonarCloud API token is stored 
+    description: the name of the environment variable where the SonarCloud API token is stored
     default: SONAR_TOKEN
     type: env_var_name
   cache_version:
@@ -12,6 +12,13 @@ parameters:
     description: the root of the project that should be analyzed (relative to the root directory of the repository)
     default: .
     type: string
+  executor_os:
+    description: |
+      Specify the OS of the executor. Supported options are: linux, macosx, or any.
+      If using an MacOS M1 (silicon) executor, please use `any`.
+    default: "linux"
+    type: enum
+    enum: ["linux", "macosx", "any"]
 steps:
   - run:
       name: Create cache directory if it doesn't exist
@@ -27,19 +34,30 @@ steps:
         SONAR_TOKEN=$<<parameters.sonar_token_variable_name>>
         SCANNER_DIRECTORY=/tmp/cache/scanner
         export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
-        OS="linux"
+        OS=<<parameters.executor_os>>
         echo $SONAR_USER_HOME
 
-        if [[ ! -x "$SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner" ]]; then
-          curl -Ol https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION-$OS.zip
-          unzip -qq -o sonar-scanner-cli-$VERSION-$OS.zip -d $SCANNER_DIRECTORY
+        if [[ "$OS" = "any" ]]; then
+          SCANNER_ZIP_NAME=sonar-scanner-cli-$VERSION
+          SCANNER_DIR_NAME=sonar-scanner-$VERSION
+        else
+          SCANNER_ZIP_NAME=sonar-scanner-cli-$VERSION-$OS
+          SCANNER_DIR_NAME=sonar-scanner-$VERSION-$OS
         fi
-        
-        chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
-        chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
+
+        if [[ ! -x "$SCANNER_DIRECTORY/$SCANNER_CLI_NAME/bin/sonar-scanner" ]]; then
+          SCANNER_BASE_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
+          curl -Ol $SCANNER_BASE_URL/$SCANNER_ZIP_NAME.zip
+          unzip -qq -o $SCANNER_ZIP_NAME.zip -d $SCANNER_DIRECTORY
+        fi
+
+        chmod +x $SCANNER_DIRECTORY/$SCANNER_DIR_NAME/bin/sonar-scanner
+        if [[ -x "$SCANNER_DIRECTORY/$SCANNER_DIR_NAME/jre/bin/java" ]]; then
+          chmod +x $SCANNER_DIRECTORY/$SCANNER_DIR_NAME/jre/bin/java
+        fi
 
         cd <<parameters.project_root>>
-        $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
+        $SCANNER_DIRECTORY/$SCANNER_DIR_NAME/bin/sonar-scanner
       environment:
         SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://sonarcloud.io"}'
   - save_cache:
