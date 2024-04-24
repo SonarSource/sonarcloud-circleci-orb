@@ -13,9 +13,12 @@ parameters:
     default: .
     type: string
   executor_os:
-    description: specify the OS of the executor. Supported options are linux and macosx.
+    description: |
+      Specify the OS of the executor. Supported options are: linux, macosx, or any.
+      If `any` is specified, please ensure your system already has a recent Java JRE installed.
     default: "linux"
-    type: string
+    type: enum
+    enum: ["linux", "macosx", "any"]
 steps:
   - run:
       name: Create cache directory if it doesn't exist
@@ -34,16 +37,25 @@ steps:
         OS=<<parameters.executor_os>>
         echo $SONAR_USER_HOME
 
-        if [[ ! -x "$SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner" ]]; then
-          curl -Ol https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION-$OS.zip
-          unzip -qq -o sonar-scanner-cli-$VERSION-$OS.zip -d $SCANNER_DIRECTORY
+        if [[ "$OS" = "any" ]]; then
+          SCANNER_FILENAME=sonar-scanner-cli-$VERSION
+        else
+          SCANNER_FILENAME=sonar-scanner-cli-$VERSION-$OS
         fi
 
-        chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
-        chmod +x $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/jre/bin/java
+        if [[ ! -x "$SCANNER_DIRECTORY/$SCANNER_FILENAME/bin/sonar-scanner" ]]; then
+          SCANNER_BASE_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
+          curl -Ol $SCANNER_BASE_URL/$SCANNER_FILENAME.zip
+          unzip -qq -o $SCANNER_FILENAME.zip -d $SCANNER_DIRECTORY
+        fi
+
+        chmod +x $SCANNER_DIRECTORY/$SCANNER_FILENAME/bin/sonar-scanner
+        if [[ -x "$SCANNER_DIRECTORY/$SCANNER_FILENAME/jre/bin/java" ]]; then
+          chmod +x $SCANNER_DIRECTORY/$SCANNER_FILENAME/jre/bin/java
+        fi
 
         cd <<parameters.project_root>>
-        $SCANNER_DIRECTORY/sonar-scanner-$VERSION-$OS/bin/sonar-scanner
+        $SCANNER_DIRECTORY/$SCANNER_FILENAME/bin/sonar-scanner
       environment:
         SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://sonarcloud.io"}'
   - save_cache:
