@@ -57,7 +57,7 @@ steps:
         fi
 
         cd <<parameters.project_root>>
-        $SCANNER_DIRECTORY/$SCANNER_FILENAME/bin/sonar-scanner
+        $SCANNER_DIRECTORY/$SCANNER_DIR_NAME/bin/sonar-scanner
       environment:
         SONARQUBE_SCANNER_PARAMS: '{"sonar.host.url":"https://sonarcloud.io"}'
   - save_cache:
