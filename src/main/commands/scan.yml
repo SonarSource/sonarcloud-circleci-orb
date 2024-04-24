@@ -15,7 +15,7 @@ parameters:
   executor_os:
     description: |
       Specify the OS of the executor. Supported options are: linux, macosx, or any.
-      If `any` is specified, please ensure your system already has a recent Java JRE installed.
+      If using an MacOS M1 (silicon) executor, please use `any`.
     default: "linux"
     type: enum
     enum: ["linux", "macosx", "any"]
