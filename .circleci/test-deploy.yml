@@ -16,6 +16,7 @@ release-filters: &release-filters
     ignore: /.*/
   tags:
     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
 jobs:
   test:
     parameters:
@@ -26,6 +27,21 @@ jobs:
     steps:
       - checkout
       - sonarcloud/scan
+
+  test-us-region:
+    docker:
+      - image: node:latest
+    environment:
+      SONAR_TOKEN: "fake_token"
+      SONAR_REGION: "US"
+      SONARQUBE_SCANNER_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
+    steps:
+      - checkout
+      - sonarcloud/scan
+      - run:
+          name: Check scan output
+          command: ./src/scripts/assertFileContains.sh ./output.properties "sonar.region=US"
+
 workflows:
   test-deploy:
     jobs:
@@ -41,6 +57,9 @@ workflows:
           name: integration-test-circleci-python
           image: circleci/python
           context: SonarCloud Analysis
+      - test-us-region:
+          filters: *filters
+          name: integration-test-us-region
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters
@@ -53,5 +72,6 @@ workflows:
             - orb-tools/pack
             - integration-test-node
             - integration-test-circleci-python
+            - integration-test-us-region
           context: Publishing Orb
           filters: *release-filters
