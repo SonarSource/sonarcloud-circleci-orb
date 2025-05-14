@@ -1,47 +1,29 @@
 version: 2.1
+setup: true
 orbs:
-  orb-tools: circleci/orb-tools@8.27.4
-  sonarcloud: sonarsource/sonarcloud@dev:alpha
-jobs:
-  test:
-    parameters:
-      image:
-        type: string
-    docker:
-      - image: <<parameters.image>>:latest
-    steps:
-      - checkout
-      - sonarcloud/scan
+  orb-tools: circleci/orb-tools@12.3
+  shellcheck: circleci/shellcheck@3.2
+
+filters: &filters
+  tags:
+    only: /.*/
+
 workflows:
-  publish-dev:
+  lint-pack:
     jobs:
+      - orb-tools/lint:
+          filters: *filters
       - orb-tools/pack:
-          source-dir: src/main
-          destination-orb-path: orb.yml
-          workspace-path: orb.yml
-          artifact-path: orb.yml
-      - orb-tools/publish-dev:
-          context: Publishing Orb
-          orb-name: sonarsource/sonarcloud
-          requires: [orb-tools/pack]
-      - test:
-          name: test-node
-          image: node
-          context: SonarCloud Analysis
-          requires: [orb-tools/publish-dev]
-      - test:
-          name: test-circleci-python
-          image: circleci/python
-          context: SonarCloud Analysis
-          requires: [orb-tools/publish-dev]
-      - orb-tools/publish:
-          context: Publishing Orb
-          orb-ref: sonarsource/sonarcloud@2.0.0
-          attach-workspace: true
-          requires: [test-node, test-circleci-python]
-          filters:
-            branches:
-              only: master
-
-
-
+          filters: *filters
+      - orb-tools/review:
+          orb_name: sonarcloud
+          filters: *filters
+      - shellcheck/check:
+          filters: *filters
+      # Triggers the next workflow in the Orb Development Kit.
+      - orb-tools/continue:
+          pipeline_number: << pipeline.number >>
+          vcs_type: github
+          orb_name: sonarcloud
+          requires: [orb-tools/lint, orb-tools/pack, orb-tools/review, shellcheck/check]
+          filters: *filters

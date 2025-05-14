@@ -6,8 +6,8 @@ usage:
       docker:
         - image: node:latest
       steps:
-      - checkout
-      - sonarcloud/scan
+        - checkout
+        - sonarcloud/scan
   orbs:
     sonarcloud: sonarsource/sonarcloud@1.1.0
   workflows:
