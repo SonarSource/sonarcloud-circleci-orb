@@ -34,7 +34,7 @@ jobs:
     environment:
       SONAR_TOKEN: "fake_token"
       SONAR_REGION: "US"
-      SONARQUBE_SCANNER_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
+      SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
     steps:
       - checkout
       - sonarcloud/scan
