@@ -1,0 +1,9 @@
+version: 2.1
+description: >
+  An Orb to run SonarQube Cloud analysis.
+  SonarQube Cloud (formerly SonarCloud) is a widely used static analysis solution for continuous code quality and security inspection.
+  It helps developers detect coding issues in 30+ languages, frameworks, and IaC platforms, including Java, JavaScript, TypeScript, C#, Python, C, C++, and many more.
+  The solution also provides fix recommendations leveraging AI with Sonar's AI CodeFix capability.
+display:
+  home_url: https://www.sonarcloud.io/
+  source_url: https://github.com/SonarSource/sonarcloud-circleci-orb

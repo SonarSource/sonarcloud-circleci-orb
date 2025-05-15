@@ -1,0 +1,57 @@
+version: 2.1
+orbs:
+  # Your orb will be automatically injected here during the pipeline.
+  # Reference your orb's jobs and commands below as they will exist when built.
+  orb-tools: circleci/orb-tools@12.3
+  # The orb definition is intentionally not included here. It will be injected into the pipeline.
+  sonarcloud: {}
+# Use this tag to ensure test jobs always run,
+# even though the downstream publish job will only run on release tags.
+filters: &filters
+  tags:
+    only: /.*/
+# Filter for release tags.
+release-filters: &release-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+jobs:
+  test:
+    parameters:
+      image:
+        type: string
+    docker:
+      - image: <<parameters.image>>:latest
+    steps:
+      - checkout
+      - sonarcloud/scan
+workflows:
+  test-deploy:
+    jobs:
+      # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
+      # Test your orb's commands in a custom job and test your orb's jobs directly as a part of this workflow.
+      - test:
+          filters: *filters
+          name: integration-test-node
+          image: node
+          context: SonarCloud Analysis
+      - test:
+          filters: *filters
+          name: integration-test-circleci-python
+          image: circleci/python
+          context: SonarCloud Analysis
+      # The orb must be re-packed for publishing, and saved to the workspace.
+      - orb-tools/pack:
+          filters: *release-filters
+      - orb-tools/publish:
+          orb_name: sonarsource/sonarcloud
+          vcs_type: github
+          pub_type: production
+          # Ensure this job requires all test jobs and the pack job.
+          requires:
+            - orb-tools/pack
+            - integration-test-node
+            - integration-test-circleci-python
+          context: Publishing Orb
+          filters: *release-filters
