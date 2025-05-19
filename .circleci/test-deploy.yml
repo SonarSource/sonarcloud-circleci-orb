@@ -66,7 +66,7 @@ workflows:
           filters: *filters
           context: Publishing Orb
           orb-name: sonarsource/sonarcloud
-          requires: orb-tools/pack
+          requires: [orb-tools/pack]
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters
