@@ -42,6 +42,22 @@ jobs:
           name: Check scan output
           command: ./src/scripts/assertFileContains.sh ./output.properties "sonar.region=US"
 
+  test-project-root:
+    docker:
+      - image: node:latest
+    environment:
+      SONAR_TOKEN: "fake_token"
+      SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
+    steps:
+      - checkout
+      - run:
+          command: mkdir some_folder
+      - sonarcloud/scan:
+          project_root: some_folder
+      - run:
+          name: Check scan output
+          command: ./src/scripts/assertFileContains.sh ./some_folder/output.properties "some_folder"
+
 workflows:
   test-deploy:
     jobs:
@@ -60,6 +76,9 @@ workflows:
       - test-us-region:
           filters: *filters
           name: integration-test-us-region
+      - test-project-root:
+          filters: *filters
+          name: integration-test-project-root
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters
@@ -73,5 +92,6 @@ workflows:
             - integration-test-node
             - integration-test-circleci-python
             - integration-test-us-region
+            - integration-test-project-root
           context: Publishing Orb
           filters: *release-filters

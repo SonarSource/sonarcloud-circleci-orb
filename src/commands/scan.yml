@@ -21,6 +21,8 @@ steps:
         - v<<parameters.cache_version>>-sonarcloud-scanner-7.1.0.4889
   - run:
       name: SonarQube Cloud
+      environment:
+        PROJECT_ROOT: <<parameters.project_root>>
       command: <<include(scripts/scan.sh)>>
   - save_cache:
       key: v<<parameters.cache_version>>-sonarcloud-scanner-7.1.0.4889
