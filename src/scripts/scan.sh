@@ -4,6 +4,7 @@ set -e
 VERSION=7.1.0.4889
 SONAR_TOKEN_VARIABLE_NAME=${SONAR_TOKEN_VARIABLE_NAME:?Environment variable SONAR_TOKEN_VARIABLE_NAME is required}
 SONAR_TOKEN=$(printenv "$SONAR_TOKEN_VARIABLE_NAME" 2>/dev/null || { echo "Environment variable $SONAR_TOKEN_VARIABLE_NAME is required" >&2; exit 1; })
+export SONAR_TOKEN
 SCANNER_DIRECTORY=/tmp/cache/scanner
 export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
 OS="linux"
