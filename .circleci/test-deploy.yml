@@ -25,7 +25,8 @@ jobs:
     docker:
       - image: <<parameters.image>>:latest
     steps:
-      - checkout
+      - checkout:
+          method: blobless
       - sonarcloud/scan
 
   test-us-region:
@@ -36,7 +37,8 @@ jobs:
       SONAR_REGION: "US"
       SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
     steps:
-      - checkout
+      - checkout:
+          method: blobless
       - sonarcloud/scan
       - run:
           name: Check scan output
@@ -49,7 +51,8 @@ jobs:
       SONAR_TOKEN: "fake_token"
       SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
     steps:
-      - checkout
+      - checkout:
+          method: blobless
       - run:
           command: mkdir some_folder
       - sonarcloud/scan:
