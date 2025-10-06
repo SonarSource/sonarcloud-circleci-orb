@@ -22,7 +22,7 @@ steps:
   - run:
       name: SonarQube Cloud
       environment:
-        SONAR_TOKEN_VARIABLE_NAME: <<pipeline.parameters.sonar_token_variable_name>>
+        SONAR_TOKEN_VARIABLE_NAME: <<parameters.sonar_token_variable_name>>
         PROJECT_ROOT: <<parameters.project_root>>
       command: <<include(scripts/scan.sh)>>
   - save_cache:
