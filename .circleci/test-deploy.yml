@@ -58,6 +58,22 @@ jobs:
           name: Check scan output
           command: ./src/scripts/assertFileContains.sh ./some_folder/output.properties "some_folder"
 
+  test-sonar-token-variable-name:
+    docker:
+      - image: node:latest
+    environment:
+      MY_SONAR_TOKEN: "fake_token"
+      SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
+    steps:
+      - checkout
+      - run:
+          command: mkdir some_folder
+      - sonarcloud/scan:
+          sonar_token_variable_name: MY_SONAR_TOKEN
+      - run:
+          name: Check scan output
+          command: ./src/scripts/assertFileExists.sh ./output.properties
+
 workflows:
   test-deploy:
     jobs:
@@ -79,6 +95,9 @@ workflows:
       - test-project-root:
           filters: *filters
           name: integration-test-project-root
+      - test-sonar-token-variable-name:
+          filters: *filters
+          name: integration-test-sonar-token-variable-name
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters
@@ -93,5 +112,6 @@ workflows:
             - integration-test-circleci-python
             - integration-test-us-region
             - integration-test-project-root
+            - integration-test-sonar-token-variable-name
           context: Publishing Orb
           filters: *release-filters
