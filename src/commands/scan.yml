@@ -13,7 +13,7 @@ parameters:
     default: .
     type: string
   scanner_version:
-    description: version of the soanr scanner cli.
+    description: the version of the sonar scanner cli
     default: 7.1.0.4889
     type: string
 steps:
