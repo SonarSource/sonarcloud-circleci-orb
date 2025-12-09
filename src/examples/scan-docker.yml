@@ -9,7 +9,7 @@ usage:
         - checkout
         - sonarcloud/scan
   orbs:
-    sonarcloud: sonarsource/sonarcloud@3.0
+    sonarcloud: sonarsource/sonarcloud@4.0
   workflows:
     main:
       jobs:

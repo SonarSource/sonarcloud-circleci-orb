@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
-VERSION=7.1.0.4889
+VERSION=8.0.1.6346
 SONAR_TOKEN=${SONAR_TOKEN:?Environment variable SONAR_TOKEN is required}
 SCANNER_DIRECTORY=/tmp/cache/scanner
 export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
