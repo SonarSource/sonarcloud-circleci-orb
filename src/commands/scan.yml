@@ -18,12 +18,12 @@ steps:
       command: mkdir -p /tmp/cache/scanner
   - restore_cache:
       keys:
-        - v<<parameters.cache_version>>-sonarcloud-scanner-7.1.0.4889
+        - v<<parameters.cache_version>>-sonarcloud-scanner-8.0.1.6346
   - run:
       name: SonarQube Cloud
       environment:
         PROJECT_ROOT: <<parameters.project_root>>
       command: <<include(scripts/scan.sh)>>
   - save_cache:
-      key: v<<parameters.cache_version>>-sonarcloud-scanner-7.1.0.4889
+      key: v<<parameters.cache_version>>-sonarcloud-scanner-8.0.1.6346
       paths: /tmp/cache/scanner
