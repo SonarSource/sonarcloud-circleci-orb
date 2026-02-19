@@ -12,18 +12,23 @@ parameters:
     description: the root of the project that should be analyzed (relative to the root directory of the repository)
     default: .
     type: string
+  scanner_version:
+    description: the version of the sonar scanner cli
+    default: 8.0.1.6346
+    type: string
 steps:
   - run:
       name: Create cache directory if it doesn't exist
       command: mkdir -p /tmp/cache/scanner
   - restore_cache:
       keys:
-        - v<<parameters.cache_version>>-sonarcloud-scanner-8.0.1.6346
+        - v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>
   - run:
       name: SonarQube Cloud
       environment:
         PROJECT_ROOT: <<parameters.project_root>>
+        SCANNER_VERSION: <<parameters.scanner_version>>
       command: <<include(scripts/scan.sh)>>
   - save_cache:
-      key: v<<parameters.cache_version>>-sonarcloud-scanner-8.0.1.6346
+      key: v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>
       paths: /tmp/cache/scanner

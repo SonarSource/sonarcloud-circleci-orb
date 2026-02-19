@@ -58,6 +58,20 @@ jobs:
           name: Check scan output
           command: ./src/scripts/assertFileContains.sh ./some_folder/output.properties "some_folder"
 
+  test-scanner-version:
+    docker:
+      - image: node:latest
+    environment:
+      SONAR_TOKEN: "fake_token"
+      SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
+    steps:
+      - checkout
+      - sonarcloud/scan:
+          scanner_version: "6.2.1.4610"
+      - run:
+          name: Check scan output
+          command: ./src/scripts/assertFileContains.sh ./output.properties "sonar.scanner.appVersion=6.2.1.4610"
+
 workflows:
   test-deploy:
     jobs:
@@ -79,6 +93,9 @@ workflows:
       - test-project-root:
           filters: *filters
           name: integration-test-project-root
+      - test-scanner-version:
+          filters: *filters
+          name: integration-test-scanner-version
       # The orb must be re-packed for publishing, and saved to the workspace.
       - orb-tools/pack:
           filters: *release-filters
@@ -93,5 +110,6 @@ workflows:
             - integration-test-circleci-python
             - integration-test-us-region
             - integration-test-project-root
+            - integration-test-scanner-version
           context: Publishing Orb
           filters: *release-filters
