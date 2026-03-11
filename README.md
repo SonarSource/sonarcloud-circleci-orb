@@ -18,4 +18,4 @@ See files in [the `examples` directory](https://github.com/SonarSource/sonarclou
 To publish a new version of the orb, you need to change the version found in `.circleci/config.yml` to the new version. The CircleCI build pipeline will then publish the new version of the orb.
 
 ### Requirements
-See https://docs.sonarcloud.io/appendices/scanner-environment/
+See https://docs.sonarsource.com/sonarqube-cloud/advanced-setup/scanner-environment
