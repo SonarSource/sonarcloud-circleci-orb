@@ -6,8 +6,27 @@ SONAR_TOKEN=${SONAR_TOKEN:?Environment variable SONAR_TOKEN is required}
 SCANNER_DIRECTORY=/tmp/cache/scanner
 export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
 OS="linux"
-ARCH="x64"
-VERSION_OS_ARCH="$SCANNER_VERSION-$OS-$ARCH"
+ARCH=""
+
+case $(uname -m) in
+    x86_64 | x64 | amd64)
+      ARCH="x64"
+      ;;
+    arm64 | aarch64)
+      ARCH="aarch64"
+      ;;
+    *)
+      echo "WARN: CPU architecture not supported or found. Assuming pre-installed JVM."
+      ARCH=""
+      ;;
+esac
+
+if [[ -n $ARCH ]]; then
+  VERSION_OS_ARCH="$SCANNER_VERSION-$OS-$ARCH"
+else
+  VERSION_OS_ARCH="$SCANNER_VERSION-$OS"
+fi
+
 echo "Sonar user home: $SONAR_USER_HOME"
 
 if [[ ! -x "$SCANNER_DIRECTORY/sonar-scanner-$VERSION_OS_ARCH/bin/sonar-scanner" ]]; then
