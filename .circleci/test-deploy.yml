@@ -52,6 +52,8 @@ jobs:
             if grep -qi '<html' /tmp/sonar-jre-result; then
               echo "JRE error response is HTML"
             fi
+            status=$(curl -sS -o /dev/null -w '%{http_code}' 'https://api.sonarcloud.io/analysis/jres?os=linux&arch=x86_64')
+            echo "JRE endpoint without authentication HTTP status: $status"
       - sonarcloud/scan
 
   test-us-region:
