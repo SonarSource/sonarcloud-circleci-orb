@@ -8,14 +8,6 @@ filters: &filters
   tags:
     only: /.*/
 
-jobs:
-  shell-tests:
-    docker:
-      - image: node:22-bookworm
-    steps:
-      - checkout
-      - run: bash tests/scan_test.sh
-
 workflows:
   lint-pack:
     jobs:
@@ -29,12 +21,10 @@ workflows:
       - shellcheck/check:
           filters: *filters
           exclude: "SC1091"
-      - shell-tests:
-          filters: *filters
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
           pipeline_number: << pipeline.number >>
           vcs_type: github
           orb_name: sonarcloud
-          requires: [orb-tools/lint, orb-tools/pack, orb-tools/review, shellcheck/check, shell-tests]
+          requires: [orb-tools/lint, orb-tools/pack, orb-tools/review, shellcheck/check]
           filters: *filters

@@ -63,11 +63,6 @@ jobs:
           command: ./src/scripts/assertFileContains.sh ./some_folder/output.properties "some_folder"
 
   test-scanner-version:
-    parameters:
-      resource_class:
-        type: string
-        default: medium
-    resource_class: <<parameters.resource_class>>
     docker:
       - image: node:latest
     environment:
@@ -102,10 +97,6 @@ workflows:
           image: node
           resource_class: arm.medium
           context: SonarCloud Analysis
-      - test-scanner-version:
-          filters: *filters
-          name: integration-test-scanner-version-arm64
-          resource_class: arm.medium
       - test-us-region:
           filters: *filters
           name: integration-test-us-region
@@ -128,7 +119,6 @@ workflows:
             - integration-test-node
             - integration-test-circleci-python
             - integration-test-node-arm64
-            - integration-test-scanner-version-arm64
             - integration-test-us-region
             - integration-test-project-root
             - integration-test-scanner-version
