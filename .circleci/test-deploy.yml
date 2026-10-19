@@ -46,8 +46,12 @@ jobs:
             else
               echo "Token validation: not valid"
             fi
-            status=$(curl -sS -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $SONAR_TOKEN" 'https://api.sonarcloud.io/analysis/jres?os=linux&arch=x86_64')
+            status=$(curl -sS -D /tmp/sonar-jre-headers -o /tmp/sonar-jre-result -w '%{http_code}' -H "Authorization: Bearer $SONAR_TOKEN" 'https://api.sonarcloud.io/analysis/jres?os=linux&arch=x86_64')
             echo "JRE endpoint HTTP status: $status"
+            grep -Ei '^(server|content-type|x-cache|x-amzn-errortype):' /tmp/sonar-jre-headers || true
+            if grep -qi '<html' /tmp/sonar-jre-result; then
+              echo "JRE error response is HTML"
+            fi
       - sonarcloud/scan
 
   test-us-region:
