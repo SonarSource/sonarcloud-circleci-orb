@@ -32,62 +32,6 @@ jobs:
       - checkout
       - sonarcloud/scan
 
-  test-architecture:
-    parameters:
-      resource_class:
-        type: string
-      scanner_version:
-        type: string
-      warm_cache:
-        type: boolean
-        default: false
-    docker:
-      - image: node:22-bookworm
-    resource_class: <<parameters.resource_class>>
-    environment:
-      SONAR_TOKEN: "fake_token"
-      SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
-    steps:
-      - checkout
-      - run:
-          name: Verify executor architecture and absence of system Java
-          command: |
-            case "<<parameters.resource_class>>" in
-              medium) test "$(uname -m)" = x86_64 ;;
-              arm.medium) test "$(uname -m)" = aarch64 ;;
-              *) exit 1 ;;
-            esac
-            if command -v java; then
-              echo "This test requires an image without system Java" >&2
-              exit 1
-            fi
-      - restore_cache:
-          keys:
-            - v<<pipeline.number>>-sonarcloud-scanner-<<parameters.scanner_version>>-{{ arch }}
-      - run:
-          name: Verify expected cache state
-          environment:
-            WARM_CACHE: "<<parameters.warm_cache>>"
-          command: |
-            if [ "$WARM_CACHE" = "true" ]; then
-              case "$(uname -m)" in
-                x86_64) arch=x64 ;;
-                aarch64) arch=aarch64 ;;
-                *) exit 1 ;;
-              esac
-              scanner=/tmp/cache/scanner/sonar-scanner-<<parameters.scanner_version>>-linux-$arch
-              test -x "$scanner/bin/sonar-scanner"
-              test -x "$scanner/jre/bin/java"
-            else
-              test ! -d /tmp/cache/scanner
-            fi
-      - sonarcloud/scan:
-          scanner_version: <<parameters.scanner_version>>
-          cache_version: <<pipeline.number>>
-      - run:
-          name: Verify scanner version
-          command: ./src/scripts/assertFileContains.sh ./output.properties "sonar.scanner.appVersion=<<parameters.scanner_version>>"
-
   test-us-region:
     docker:
       - image: node:latest
@@ -119,6 +63,11 @@ jobs:
           command: ./src/scripts/assertFileContains.sh ./some_folder/output.properties "some_folder"
 
   test-scanner-version:
+    parameters:
+      resource_class:
+        type: string
+        default: medium
+    resource_class: <<parameters.resource_class>>
     docker:
       - image: node:latest
     environment:
@@ -153,24 +102,10 @@ workflows:
           image: node
           resource_class: arm.medium
           context: SonarCloud Analysis
-      - test-architecture:
+      - test-scanner-version:
           filters: *filters
-          name: architecture-cold-<<matrix.resource_class>>-<<matrix.scanner_version>>
-          matrix:
-            alias: architecture-cold
-            parameters:
-              resource_class: [medium, arm.medium]
-              scanner_version: ["8.0.1.6346", "6.2.1.4610"]
-      - test-architecture:
-          filters: *filters
-          name: architecture-warm-<<matrix.resource_class>>-<<matrix.scanner_version>>
-          warm_cache: true
-          requires: [architecture-cold]
-          matrix:
-            alias: architecture-warm
-            parameters:
-              resource_class: [medium, arm.medium]
-              scanner_version: ["8.0.1.6346", "6.2.1.4610"]
+          name: integration-test-scanner-version-arm64
+          resource_class: arm.medium
       - test-us-region:
           filters: *filters
           name: integration-test-us-region
@@ -193,8 +128,7 @@ workflows:
             - integration-test-node
             - integration-test-circleci-python
             - integration-test-node-arm64
-            - architecture-cold
-            - architecture-warm
+            - integration-test-scanner-version-arm64
             - integration-test-us-region
             - integration-test-project-root
             - integration-test-scanner-version

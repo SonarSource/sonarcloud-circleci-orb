@@ -11,10 +11,10 @@ filters: &filters
 jobs:
   shell-tests:
     docker:
-      - image: cimg/python:3.13
+      - image: node:22-bookworm
     steps:
       - checkout
-      - run: python3 -m unittest discover -s tests -v
+      - run: bash tests/scan_test.sh
 
 workflows:
   lint-pack:
