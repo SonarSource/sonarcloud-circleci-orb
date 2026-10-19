@@ -30,6 +30,24 @@ jobs:
     resource_class: <<parameters.resource_class>>
     steps:
       - checkout
+      - run:
+          name: Check Cloud authentication (temporary diagnostic)
+          command: |
+            set +x
+            if [ "$SONAR_TOKEN" != "$(printf '%s' "$SONAR_TOKEN" | tr -d '[:space:]')" ]; then
+              echo "Token contains whitespace: yes"
+            else
+              echo "Token contains whitespace: no"
+            fi
+            status=$(curl -sS -o /tmp/sonar-auth-result -w '%{http_code}' -H "Authorization: Bearer $SONAR_TOKEN" https://sonarcloud.io/api/authentication/validate)
+            echo "Authentication endpoint HTTP status: $status"
+            if grep -Eq '"valid"[[:space:]]*:[[:space:]]*true' /tmp/sonar-auth-result; then
+              echo "Token validation: valid"
+            else
+              echo "Token validation: not valid"
+            fi
+            status=$(curl -sS -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $SONAR_TOKEN" 'https://api.sonarcloud.io/analysis/jres?os=linux&arch=x86_64')
+            echo "JRE endpoint HTTP status: $status"
       - sonarcloud/scan
 
   test-us-region:
