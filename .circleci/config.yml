@@ -8,6 +8,14 @@ filters: &filters
   tags:
     only: /.*/
 
+jobs:
+  shell-tests:
+    docker:
+      - image: cimg/python:3.13
+    steps:
+      - checkout
+      - run: python3 -m unittest discover -s tests -v
+
 workflows:
   lint-pack:
     jobs:
@@ -21,10 +29,12 @@ workflows:
       - shellcheck/check:
           filters: *filters
           exclude: "SC1091"
+      - shell-tests:
+          filters: *filters
       # Triggers the next workflow in the Orb Development Kit.
       - orb-tools/continue:
           pipeline_number: << pipeline.number >>
           vcs_type: github
           orb_name: sonarcloud
-          requires: [orb-tools/lint, orb-tools/pack, orb-tools/review, shellcheck/check]
+          requires: [orb-tools/lint, orb-tools/pack, orb-tools/review, shellcheck/check, shell-tests]
           filters: *filters

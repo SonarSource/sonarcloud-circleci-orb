@@ -6,9 +6,8 @@ SONAR_TOKEN=${SONAR_TOKEN:?Environment variable SONAR_TOKEN is required}
 SCANNER_DIRECTORY=/tmp/cache/scanner
 export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
 OS="linux"
-ARCH=""
-
-case $(uname -m) in
+ARCH=$(uname -m)
+case "$ARCH" in
     x86_64 | x64 | amd64)
       ARCH="x64"
       ;;
@@ -16,22 +15,18 @@ case $(uname -m) in
       ARCH="aarch64"
       ;;
     *)
-      echo "WARN: CPU architecture not supported or found. Assuming pre-installed JVM."
-      ARCH=""
+      echo "Unsupported CPU architecture: $ARCH. Supported architectures: x86_64 and aarch64 (ARM64)." >&2
+      exit 1
       ;;
 esac
 
-if [[ -n $ARCH ]]; then
-  VERSION_OS_ARCH="$SCANNER_VERSION-$OS-$ARCH"
-else
-  VERSION_OS_ARCH="$SCANNER_VERSION-$OS"
-fi
+VERSION_OS_ARCH="$SCANNER_VERSION-$OS-$ARCH"
 
 echo "Sonar user home: $SONAR_USER_HOME"
 
 if [[ ! -x "$SCANNER_DIRECTORY/sonar-scanner-$VERSION_OS_ARCH/bin/sonar-scanner" ]]; then
   echo "Downloading Sonar Scanner..."
-  curl -Ol "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION_OS_ARCH.zip"
+  curl -fLO "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION_OS_ARCH.zip"
   unzip -qq -o "sonar-scanner-cli-$VERSION_OS_ARCH.zip" -d $SCANNER_DIRECTORY
 fi
 
