@@ -6,17 +6,10 @@ SONAR_TOKEN=${SONAR_TOKEN:?Environment variable SONAR_TOKEN is required}
 SCANNER_DIRECTORY=/tmp/cache/scanner
 export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
 OS="linux"
-ARCH=$(uname -m)
-case "$ARCH" in
-    x86_64 | x64 | amd64)
-      ARCH="x64"
-      ;;
+ARCH="x64"
+case "$(uname -m)" in
     arm64 | aarch64)
       ARCH="aarch64"
-      ;;
-    *)
-      echo "Unsupported CPU architecture: $ARCH. Supported architectures: x86_64 and aarch64 (ARM64)." >&2
-      exit 1
       ;;
 esac
 

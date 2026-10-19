@@ -4,7 +4,7 @@ Support for SonarScanner CLI in CircleCI
 ## SonarQube Cloud Orb
 The SonarQube Cloud Orb can be used with any Linux-based Docker image that includes the command-line tools `curl` and `unzip`.
 
-The orb selects the bundled-Java scanner for Linux x64 or ARM64; other CPU architectures are rejected.
+The orb selects the bundled-Java ARM64 scanner when `uname -m` reports `arm64` or `aarch64`, and defaults to x64 otherwise.
 For ARM64, use an ARM64-compatible Docker image and a CircleCI resource class such as `arm.medium`.
 Custom `scanner_version` values must provide a Linux distribution for the selected architecture.
 
