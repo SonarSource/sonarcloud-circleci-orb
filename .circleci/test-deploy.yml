@@ -22,8 +22,12 @@ jobs:
     parameters:
       image:
         type: string
+      resource_class:
+        type: string
+        default: medium
     docker:
       - image: <<parameters.image>>:latest
+    resource_class: <<parameters.resource_class>>
     steps:
       - checkout
       - sonarcloud/scan
@@ -87,6 +91,12 @@ workflows:
           name: integration-test-circleci-python
           image: circleci/python
           context: SonarCloud Analysis
+      - test:
+          filters: *filters
+          name: integration-test-node-arm64
+          image: node
+          resource_class: arm.medium
+          context: SonarCloud Analysis
       - test-us-region:
           filters: *filters
           name: integration-test-us-region
@@ -108,6 +118,7 @@ workflows:
             - orb-tools/pack
             - integration-test-node
             - integration-test-circleci-python
+            - integration-test-node-arm64
             - integration-test-us-region
             - integration-test-project-root
             - integration-test-scanner-version

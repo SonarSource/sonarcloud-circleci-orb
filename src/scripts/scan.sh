@@ -7,12 +7,19 @@ SCANNER_DIRECTORY=/tmp/cache/scanner
 export SONAR_USER_HOME=$SCANNER_DIRECTORY/.sonar
 OS="linux"
 ARCH="x64"
+case "$(uname -m)" in
+    arm64 | aarch64)
+      ARCH="aarch64"
+      ;;
+esac
+
 VERSION_OS_ARCH="$SCANNER_VERSION-$OS-$ARCH"
+
 echo "Sonar user home: $SONAR_USER_HOME"
 
 if [[ ! -x "$SCANNER_DIRECTORY/sonar-scanner-$VERSION_OS_ARCH/bin/sonar-scanner" ]]; then
   echo "Downloading Sonar Scanner..."
-  curl -Ol "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION_OS_ARCH.zip"
+  curl -fLO "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$VERSION_OS_ARCH.zip"
   unzip -qq -o "sonar-scanner-cli-$VERSION_OS_ARCH.zip" -d $SCANNER_DIRECTORY
 fi
 

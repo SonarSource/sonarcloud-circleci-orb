@@ -22,7 +22,7 @@ steps:
       command: mkdir -p /tmp/cache/scanner
   - restore_cache:
       keys:
-        - v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>
+        - v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>-{{ arch }}
   - run:
       name: SonarQube Cloud
       environment:
@@ -30,5 +30,5 @@ steps:
         SCANNER_VERSION: <<parameters.scanner_version>>
       command: <<include(scripts/scan.sh)>>
   - save_cache:
-      key: v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>
+      key: v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>-{{ arch }}
       paths: /tmp/cache/scanner
