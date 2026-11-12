@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   # Your orb will be automatically injected here during the pipeline.
   # Reference your orb's jobs and commands below as they will exist when built.
-  orb-tools: circleci/orb-tools@12.3
+  orb-tools: circleci/orb-tools@12.5
   # The orb definition is intentionally not included here. It will be injected into the pipeline.
   sonarcloud: {}
 # Use this tag to ensure test jobs always run,
