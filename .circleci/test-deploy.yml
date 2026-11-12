@@ -77,16 +77,18 @@ workflows:
     jobs:
       # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
       # Test your orb's commands in a custom job and test your orb's jobs directly as a part of this workflow.
-      - test:
-          filters: *filters
-          name: integration-test-node
-          image: node
-          context: SonarCloud Analysis
-      - test:
-          filters: *filters
-          name: integration-test-circleci-python
-          image: circleci/python
-          context: SonarCloud Analysis
+      # Temporarily disabled pending the paid CircleCI upgrade (PREQ-9700).
+      # Restore these jobs and their publish requirements together after the upgrade.
+      # - test:
+      #     filters: *filters
+      #     name: integration-test-node
+      #     image: node
+      #     context: SonarCloud Analysis
+      # - test:
+      #     filters: *filters
+      #     name: integration-test-circleci-python
+      #     image: circleci/python
+      #     context: SonarCloud Analysis
       - test-us-region:
           filters: *filters
           name: integration-test-us-region
@@ -106,8 +108,9 @@ workflows:
           # Ensure this job requires all test jobs and the pack job.
           requires:
             - orb-tools/pack
-            - integration-test-node
-            - integration-test-circleci-python
+            # Restore with the full-scan jobs after the paid CircleCI upgrade.
+            # - integration-test-node
+            # - integration-test-circleci-python
             - integration-test-us-region
             - integration-test-project-root
             - integration-test-scanner-version
