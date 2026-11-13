@@ -42,6 +42,20 @@ jobs:
           name: Check scan output
           command: ./src/scripts/assertFileContains.sh ./output.properties "sonar.region=US"
 
+  test-au-region:
+    docker:
+      - image: node:latest
+    environment:
+      SONAR_TOKEN: "fake_token"
+      SONAR_REGION: "AU"
+      SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
+    steps:
+      - checkout
+      - sonarcloud/scan
+      - run:
+          name: Check scan output
+          command: ./src/scripts/assertFileContains.sh ./output.properties "sonar.region=AU"
+
   test-project-root:
     docker:
       - image: node:latest
@@ -90,6 +104,9 @@ workflows:
       - test-us-region:
           filters: *filters
           name: integration-test-us-region
+      - test-au-region:
+          filters: *filters
+          name: integration-test-au-region
       - test-project-root:
           filters: *filters
           name: integration-test-project-root
@@ -109,6 +126,7 @@ workflows:
             - integration-test-node
             - integration-test-circleci-python
             - integration-test-us-region
+            - integration-test-au-region
             - integration-test-project-root
             - integration-test-scanner-version
           context: Publishing Orb
