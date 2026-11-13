@@ -6,12 +6,17 @@ The SonarQube Cloud Orb can be used with any Linux-based Docker image that inclu
 
 The orb supports Linux x64 and ARM64 executors.
 
-### Connecting to the EU region
-- To connect to your SonarQube Cloud project on `sonarcloud.io`, you need to set up an API token. We recommend setting up a CircleCI context in your organization named `sonarcloud` that contains a variable with the key `SONAR_TOKEN` and the API token as the value.
+### Connecting to SonarQube Cloud
+- To connect to your SonarQube Cloud project, you need to set up an API token. We recommend setting up a CircleCI context in your organization named `sonarcloud` that contains a variable with the key `SONAR_TOKEN` and the API token as the value.
+- To connect to a region other than the default EU region, you need to pass the `sonar.region` parameter to the scanner. For this, we recommend adding the `SONAR_REGION` environment variable to your CircleCI context with the value of the region.
 
-### Connecting to the US region
-- To connect to your SonarQube Cloud project in the US region, `sonarqube.us`, you need to pass the `sonar.region=US` parameter to the scanner. For this, we recommend adding the `SONAR_REGION` environment variable to your CircleCI context with the value `US`.
-- To set up the API token, the recommendation is the same as for the EU region.
+| Region | URL              | `SONAR_REGION` value | Minimum SonarScanner CLI version |
+|--------|------------------|----------------------|----------------------------------|
+| EU     | `sonarcloud.io`  | (not set)            | Any                              |
+| US     | `sonarqube.us`   | `US`                 | `7.1.0.4889`                     |
+| AU     | `sonarqube.au`   | `AU`                 | `8.4.0.16527`                    |
+
+The orb uses a default SonarScanner CLI version that supports all regions. If you override the `scanner_version` parameter, make sure you use a version that supports your region.
 
 ### Usage examples
 See files in [the `examples` directory](https://github.com/SonarSource/sonarcloud-circleci-orb/tree/master/src/examples) for examples of how to use the orb.
