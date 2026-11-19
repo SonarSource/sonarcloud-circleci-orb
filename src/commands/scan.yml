@@ -19,12 +19,7 @@ parameters:
 steps:
   - run:
       name: Prepare scanner cache
-      command: |
-        mkdir -p /tmp/cache/scanner
-        case "$(uname -m)" in
-          arm64 | aarch64) echo aarch64 ;;
-          *) echo x64 ;;
-        esac > /tmp/sonar-scanner-arch
+      command: <<include(scripts/prepareCache.sh)>>
   - restore_cache:
       keys:
         - v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>-{{ checksum "/tmp/sonar-scanner-arch" }}
