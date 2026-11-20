@@ -18,11 +18,11 @@ parameters:
     type: string
 steps:
   - run:
-      name: Create cache directory if it doesn't exist
-      command: mkdir -p /tmp/cache/scanner
+      name: Prepare scanner cache
+      command: <<include(scripts/prepareCache.sh)>>
   - restore_cache:
       keys:
-        - v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>
+        - v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>-{{ checksum "/tmp/sonar-scanner-arch" }}
   - run:
       name: SonarQube Cloud
       environment:
@@ -30,5 +30,5 @@ steps:
         SCANNER_VERSION: <<parameters.scanner_version>>
       command: <<include(scripts/scan.sh)>>
   - save_cache:
-      key: v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>
+      key: v<<parameters.cache_version>>-sonarcloud-scanner-<<parameters.scanner_version>>-{{ checksum "/tmp/sonar-scanner-arch" }}
       paths: /tmp/cache/scanner
