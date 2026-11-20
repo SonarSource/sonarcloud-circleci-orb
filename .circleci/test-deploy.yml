@@ -32,19 +32,22 @@ jobs:
       - checkout
       - sonarcloud/scan
 
-  test-us-region:
+  test-region:
+    parameters:
+      region:
+        type: string
     docker:
       - image: node:latest
     environment:
       SONAR_TOKEN: "fake_token"
-      SONAR_REGION: "US"
+      SONAR_REGION: <<parameters.region>>
       SONAR_SCANNER_JSON_PARAMS: '{"sonar.scanner.internal.dumpToFile":"./output.properties"}'
     steps:
       - checkout
       - sonarcloud/scan
       - run:
           name: Check scan output
-          command: ./src/scripts/assertFileContains.sh ./output.properties "sonar.region=US"
+          command: ./src/scripts/assertFileContains.sh ./output.properties "sonar.region=<<parameters.region>>"
 
   test-project-root:
     docker:
@@ -99,9 +102,14 @@ workflows:
       #     image: node
       #     resource_class: arm.medium
       #     context: SonarCloud Analysis
-      - test-us-region:
+      - test-region:
           filters: *filters
           name: integration-test-us-region
+          region: US
+      - test-region:
+          filters: *filters
+          name: integration-test-au-region
+          region: AU
       - test-project-root:
           filters: *filters
           name: integration-test-project-root
@@ -123,6 +131,7 @@ workflows:
             # - integration-test-circleci-python
             # - integration-test-node-arm64
             - integration-test-us-region
+            - integration-test-au-region
             - integration-test-project-root
             - integration-test-scanner-version
           context: Publishing Orb
