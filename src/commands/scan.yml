@@ -14,7 +14,7 @@ parameters:
     type: string
   scanner_version:
     description: the version of the sonar scanner cli
-    default: 8.5.0.16571
+    default: 8.4.0.16527
     type: string
 steps:
   - run:
