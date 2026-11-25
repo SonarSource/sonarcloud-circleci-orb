@@ -2,5 +2,31 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>SonarSource/renovate-config"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Default SonarScanner CLI version used by the orb",
+      "managerFilePatterns": [
+        "/^src/commands/scan\\.yml$/",
+        "/^src/scripts/scan\\.sh$/"
+      ],
+      "matchStrings": [
+        "scanner_version:[\\s\\S]*?default: (?<currentValue>\\d+\\.\\d+\\.\\d+\\.\\d+)",
+        "SCANNER_VERSION:-\"(?<currentValue>\\d+\\.\\d+\\.\\d+\\.\\d+)\""
+      ],
+      "depNameTemplate": "SonarSource/sonar-scanner-cli",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Update the default scanner version in scan.yml and scan.sh in a single PR",
+      "matchDepNames": [
+        "SonarSource/sonar-scanner-cli"
+      ],
+      "groupName": "SonarScanner CLI"
+    }
   ]
 }
